@@ -2,7 +2,7 @@ public class Subred {
 
     private IP IP;
     private int cantidadDeSubredes;
-    private IP[] subredes = new IP[cantidadDeSubredes];
+    private IP[][] subredes = new IP[4][cantidadDeSubredes];
 
     // constructores
     Subred(IP p, int c) {
@@ -15,7 +15,7 @@ public class Subred {
     }
 
     // getters
-    public IP[] getSubredes() {
+    public IP[][] getSubredes() {
         return subredes;
     }
 
@@ -23,18 +23,19 @@ public class Subred {
     private void crearSubrredes() {
 
         int mascaraOriginal = IP.getMascara();
-        int i = 0;
-        String manejo = "";
+        int potencia = 0;
+        String apoyo = "";
+        String host;
 
-        while (Math.pow(2, i) < this.cantidadDeSubredes) {
+        while (Math.pow(2, potencia) < this.cantidadDeSubredes) {
 
-            i++;
+            potencia++;
 
         }
 
-        this.cantidadDeSubredes = (int) Math.pow(2, i);
+        this.cantidadDeSubredes = (int) Math.pow(2, potencia);
 
-        IP.setMascara(IP.getMascara() + i);
+        IP.setMascara(IP.getMascara() + potencia);
 
         String masc = IP.getMascaraEnBytes();
         String[] direccion = IP.getBytes();
@@ -50,33 +51,27 @@ public class Subred {
 
         }
 
-        for (int j = 0; j < bitsMascara.length; j++) {
+        for (int i = 0; i < bitsMascara.length; i++) {
 
-            if (bitsMascara[j] == 0) {
+            if (bitsMascara[i] == 0) {
 
-                manejo += "00000000";
+                apoyo += "00000000";
 
             } else {
 
-                manejo += Integer.toString(bitsMascara[j]);
+                apoyo += Integer.toString(bitsMascara[i]);
 
             }
 
         }
 
-        for (int j = 0; j < manejo.length(); j++) {
+        host = bitsDeHost(apoyo, mascaraOriginal);
 
-            if (j > mascaraOriginal - 1) {
-
-                
-
-            }
-
-        }
+        // tenemos todos los bits de host separados
 
     }
 
-    // metodo de apoyo
+    // metodos de apoyo
     private int[] llenarBytes(String s) {
 
         String[] bytes = new String[4];
@@ -108,6 +103,23 @@ public class Subred {
         }
 
         return bit;
+
+    }
+
+    public String bitsDeHost(String s, int ss) {
+
+        String ret = "";
+
+        for (int i = 0; i < s.length(); i++) {
+
+            if (i >= ss) {
+
+                ret += s.charAt(i);
+
+            }
+
+        }
+        return ret;
 
     }
 
