@@ -104,13 +104,13 @@ public class IP {
 
     public void setMascara(int m) {
 
-        if ((m > 32 || m < 0) && apoyo == 1) {
+        if ((m > 30 || m < 2) && apoyo == 1) {
 
             JOptionPane.showMessageDialog(null, "Mascara de red no valida, la mascara no se ha actualizado");
             return;
 
         }
-        if ((m > 32 || m < 0) && apoyo == 0) {
+        if ((m > 30 || m < 2) && apoyo == 0) {
 
             System.out.println("Mascara de red no valida, la mascara no se ha actualizado");
             return;

@@ -22,7 +22,7 @@ public class Subred {
     // metodo principal
     private void crearSubrredes() {
 
-        int mascaraOriginal = IP.getMascara();
+        //int mascaraOriginal = IP.getMascara();
         int potencia = 0;
         String apoyo = "";
         String host;
@@ -65,11 +65,24 @@ public class Subred {
 
         }
 
-        host = bitsDeHost(apoyo, mascaraOriginal);
+        host = bitsDeHost(apoyo, IP.getMascara());
 
-        // tenemos todos los bits de host separados
+        for (int i = 0; i < cantidadDeSubredes; i++) {
+            
+            String s = (Integer.toBinaryString(i) + host);
+
+            if(s.length() > 8){
+
+                System.out.println("pase por aqui");
+
+            }
+
+            System.out.println(Integer.parseInt(s,2) + " : " + s);
+
+        }
 
     }
+
 
     // metodos de apoyo
     private int[] llenarBytes(String s) {
@@ -124,3 +137,16 @@ public class Subred {
     }
 
 }
+
+
+        //    for (int j = 0; j < host.length(); j++) {
+                
+        //         if(host.charAt(j) == '0'){
+
+        //             System.out.print(host.charAt(j));
+                    
+        //         }
+
+        //     }
+        //     System.out.println();
+        // }
