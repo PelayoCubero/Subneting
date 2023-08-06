@@ -38,28 +38,32 @@ public class Subred {
         IP.setMascara(IP.getMascara() + potencia);
 
         String masc = IP.getMascaraEnBytes();
+        int mascaraConPotecia = IP.getMascara();
         String[] direccion = IP.getBytes();
 
+        
+        IP.setMascara(IP.getMascara() - potencia);
+
         int[] bytes = llenarBytes(masc);
-        int[] IPEnBits = new int[direccion.length];
-        int[] bitsMascara = new int[direccion.length];
+        String[] IPEnBits = new String[direccion.length];
+        String[] bitsMascara = new String[direccion.length];
 
-        for (int j = 0; j < direccion.length; j++) {
+        for (int i = 0; i < direccion.length; i++) {
 
-            IPEnBits[j] = Integer.parseInt(Integer.toBinaryString(Integer.parseInt(direccion[j])));
-            bitsMascara[j] = Integer.parseInt(Integer.toBinaryString(bytes[j]));
+            IPEnBits[i] = Integer.toBinaryString(Integer.parseInt(direccion[i]));
+            bitsMascara[i] = Integer.toBinaryString(bytes[i]);
 
         }
 
         for (int i = 0; i < bitsMascara.length; i++) {
 
-            if (bitsMascara[i] == 0) {
+            if (bitsMascara[i] == "0") {
 
                 apoyo += "00000000";
 
             } else {
 
-                apoyo += Integer.toString(bitsMascara[i]);
+                apoyo += bitsMascara[i];
 
             }
 
@@ -67,17 +71,17 @@ public class Subred {
 
         host = bitsDeHost(apoyo, IP.getMascara());
 
+        for (int i = 0; i < bitsMascara.length; i++) {
+            System.out.println(bytes[i]);
+        }
+
         for (int i = 0; i < cantidadDeSubredes; i++) {
             
-            String s = (Integer.toBinaryString(i) + host);
+            // String s = (Integer.toBinaryString(i) + host +"\n"+ masc);
 
-            if(s.length() > 8){
+            //String laIP = convertir(bitsMascara, );
 
-                System.out.println("pase por aqui");
-
-            }
-
-            System.out.println(Integer.parseInt(s,2) + " : " + s);
+            // System.out.println(Integer.parseInt(s,2) + " : " + s);
 
         }
 
