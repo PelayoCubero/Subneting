@@ -1,211 +1,156 @@
-import javax.swing.JOptionPane;
+public class IP{
 
-public class IP {
-
-    private String dir;
-    private String[] bytes = new String[4];
-    private String mascaraEnBytes;
     private int mascara;
-    private int apoyo = 0;
+    private String mascaraComoDireccion;
+    private int[] mascaraEnArray;
 
-    // contructores
-    IP(String direccionIP, int mascara) {
+    private String direccion;
+    private int[] direccionEnArray;
 
-        if (!IPValida(direccionIP)) {
+    IP(String d, int m){
 
-            System.out.println("Direccion no valida");
+        if(IPValida(d) && mascaraValida(m)){
+
+            this.direccion = d;
+            this.mascara = m;
+
+            this.mascaraComoDireccion = transformar(mascara);
+            this.direccionEnArray = dirToArray(direccion);
+            this.mascaraEnArray = dirToArray(mascaraComoDireccion);
+            
+
+        }else{
+
+            System.out.println("direccion IP o mascara erronea");
+
             return;
 
         }
-
-        setMascara(mascara);
-        this.dir = direccionIP;
-
-        llenarBytes(direccionIP);
-
-    }
-
-    IP(String direccionIP, int mascara, int t) {
-
-        this.apoyo = 1;
-
-        if (!IPValida(direccionIP)) {
-
-            JOptionPane.showMessageDialog(null, "Direccion no valida");
-            return;
-
-        }
-
-        setMascara(mascara);
-        this.dir = direccionIP;
-
-        llenarBytes(direccionIP);
 
     }
 
     // getters
-    public int getApoyo() {
-        return apoyo;
+    public String getDireccion() {
+        return direccion;
     }
-
-    public String getDir() {
-        return dir;
-    }
-
-    public String[] getBytes() {
-        return bytes;
-    }
-
     public int getMascara() {
         return mascara;
     }
-
-    public String getMascaraEnBytes() {
-        return mascaraEnBytes;
+    public String getMascaraComoDireccion() {
+        return mascaraComoDireccion;
+    }
+    public int[] getDireccionEnArray() {
+        return direccionEnArray;
+    }
+    public int[] getMascaraEnArray() {
+        return mascaraEnArray;
     }
 
-    // setters
-    public void setBytes(String[] bytes) {
+    //setters
+    public void setMascara(int mascara) {
 
+        if(mascaraValida(mascara)){
+
+            this.mascara = mascara;
+            this.mascaraComoDireccion = transformar(mascara);
+            this.mascaraEnArray = dirToArray(mascaraComoDireccion);
+
+        }else{
+
+            System.out.println("mascara no valida");
+
+        }
+
+    }
+
+    private int[] dirToArray(String dir) {
+
+        dir += '.';
         String s = "";
+        int[] arr = new int[4];
+        int ref = 0;
 
-        for (int i = 0; i < bytes.length; i++) {
+        for (int i = 0; i < dir.length(); i++) {
 
-            if (i != 3) {
+            if(dir.charAt(i) == '.'){
 
-                s += bytes[i];
-                s += ".";
+                arr[ref] = Integer.parseInt(s);
+                ref++;
+                s = "";
 
-            } else {
+            }else{
 
-                s += bytes[i];
+                s+= dir.charAt(i);
 
             }
+            
         }
 
-        if (!IPValida(s) && apoyo == 1) {
-
-            JOptionPane.showMessageDialog(null, "Direccion no valida");
-            return;
-
-        }
-        if (!IPValida(s) && apoyo == 0) {
-
-            System.out.println("Direccion no valida");
-            return;
-
-        } else {
-
-            this.bytes = bytes;
-            this.dir = s;
-        }
-
+        return arr;
     }
 
-    public void setMascara(int m) {
+    private String transformar(int m) {
 
-        if ((m > 30 || m < 2) && apoyo == 1) {
-
-            JOptionPane.showMessageDialog(null, "Mascara de red no valida, la mascara no se ha actualizado");
-            return;
-
-        }
-        if ((m > 30 || m < 2) && apoyo == 0) {
-
-            System.out.println("Mascara de red no valida, la mascara no se ha actualizado");
-            return;
-
-        } else {
-
-            this.mascara = m;
-            actualizarMascaraDeBits();
-
-        }
-
-    }
-
-    private void actualizarMascaraDeBits() {
-
-        int ref = 0;
+        int contador = 0;
         String s = "";
         String ss = "";
-        String[] arr = new String[4];
+        String r = "";
 
-        for (int i = 1; i <= 32; i++) {
+        for (int i = 0; i < 32; i++) {
 
-            if (ref < mascara) {
+            if(i < m){
 
-                s += 1;
-                ref++;
+                s += "1";
 
-            } else {
+            }else{
 
-                s += 0;
-
-            }
-
-        }
-
-        ref = 0;
-
-        for (int i = 0; i < arr.length; i++) {
-
-            String masc = "";
-
-            for (int j = i * 8; j < (i + 1) * 8; j++) {
-
-                masc += s.charAt(j);
+                s += "0";
 
             }
-
-            arr[i] = masc;
-
+            
         }
 
-        for (int i = 0; i < arr.length; i++) {
+        s += ".";
 
-            int numero;
+        for (int i = 0; i < 33; i++) {
+            if (contador == 8){
 
-            numero = Integer.parseInt(arr[i], 2);
-            ss += Integer.toString(numero);
+                r += Integer.toString(Integer.parseInt(ss,2));
+                ss = "";
+                contador = 0;
 
-            if (i != 3) {
+                if(i != 32){
 
-                ss += ".";
+                    r+= ".";
+                }
 
-            }
+                i--;
+                
+            }else{
 
-        }
-
-        mascaraEnBytes = ss;
-
-    }
-
-    // metodo que aisla cada byte de la direccion IP en un espacio del array
-    private void llenarBytes(String s) {
-
-        s += '.';
-        int contador = 0;
-        String apoyo = "";
-
-        for (int i = 0; i < s.length(); i++) {
-
-            if (s.charAt(i) == '.') {
-
-                bytes[contador] = apoyo;
+                ss += s.charAt(i);
                 contador++;
-                apoyo = "";
-
-            } else {
-
-                apoyo += s.charAt(i);
 
             }
         }
 
+        return r;
     }
 
-    // metodo que garantiza la validez de la direccion IP
+    private boolean mascaraValida(int m) {
+
+        if(m > 30 || m < 8){
+
+            return false;
+
+
+        }else{
+
+            return true;
+
+        }
+    }
+
     private boolean IPValida(String s) {
 
         s += '.';

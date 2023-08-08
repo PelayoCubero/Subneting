@@ -2,7 +2,7 @@ public class Subred {
 
     private IP IP;
     private int cantidadDeSubredes;
-    private IP[][] subredes = new IP[4][cantidadDeSubredes];
+    private Subneting[] subredes;
 
     // constructores
     Subred(IP p, int c) {
@@ -10,147 +10,279 @@ public class Subred {
         this.IP = p;
         this.cantidadDeSubredes = c;
 
+
         crearSubrredes();
 
     }
 
     // getters
-    public IP[][] getSubredes() {
+    public Subneting[] getSubredes() {
         return subredes;
     }
 
-    // metodo principal
     private void crearSubrredes() {
 
-        //int mascaraOriginal = IP.getMascara();
-        int potencia = 0;
-        String apoyo = "";
-        String host;
+        int potencia = obtenerBits();
+        int mascaraNueva = IP.getMascara() + potencia;
+        String host = obtenerHost(mascaraNueva);
+        subredes = new Subneting[cantidadDeSubredes];
 
-        while (Math.pow(2, potencia) < this.cantidadDeSubredes) {
-
-            potencia++;
-
-        }
-
-        this.cantidadDeSubredes = (int) Math.pow(2, potencia);
-
-        IP.setMascara(IP.getMascara() + potencia);
-
-        String masc = IP.getMascaraEnBytes();
-        int mascaraConPotecia = IP.getMascara();
-        String[] direccion = IP.getBytes();
-
-        
-        IP.setMascara(IP.getMascara() - potencia);
-
-        int[] bytes = llenarBytes(masc);
-        String[] IPEnBits = new String[direccion.length];
-        String[] bitsMascara = new String[direccion.length];
-
-        for (int i = 0; i < direccion.length; i++) {
-
-            IPEnBits[i] = Integer.toBinaryString(Integer.parseInt(direccion[i]));
-            bitsMascara[i] = Integer.toBinaryString(bytes[i]);
-
-        }
-
-        for (int i = 0; i < bitsMascara.length; i++) {
-
-            if (bitsMascara[i] == "0") {
-
-                apoyo += "00000000";
-
-            } else {
-
-                apoyo += bitsMascara[i];
-
-            }
-
-        }
-
-        host = bitsDeHost(apoyo, IP.getMascara());
-
-        for (int i = 0; i < bitsMascara.length; i++) {
-            System.out.println(bytes[i]);
-        }
-
-        for (int i = 0; i < cantidadDeSubredes; i++) {
+        for (int i = 0; i < subredes.length; i++) {
             
-            // String s = (Integer.toBinaryString(i) + host +"\n"+ masc);
-
-            //String laIP = convertir(bitsMascara, );
-
-            // System.out.println(Integer.parseInt(s,2) + " : " + s);
+            subredes[i] = obtenerRed(IP.getMascara(), i ,host, mascaraNueva, potencia);
+            System.out.println(subredes[i].toString());
 
         }
 
     }
+  
+    private Subneting obtenerRed(int mascara, int n, String host, int mascaraNueva, int p) {
 
-
-    // metodos de apoyo
-    private int[] llenarBytes(String s) {
-
-        String[] bytes = new String[4];
-        int[] bit = new int[4];
-
-        s += '.';
-        int contador = 0;
+        int[] ipOriginal = IP.getDireccionEnArray();
+        String comodin = Integer.toBinaryString(n);
+        String s = "";
         String apoyo = "";
+        String redEnBits = "";
+        String laIPEnBits = "";
+        String referencias = "";
+        String redDefinitiva = "";
+        int contador = 0;
+
+        for (int i = 0; i < ipOriginal.length; i++) {
+
+            String r = Integer.toBinaryString(ipOriginal[i]);
+
+            while(r.length() < 8){
+
+                r = "0" + r;
+
+            }
+
+            referencias += r;
+            
+        }
+
+        for (int i = 0; i < mascara; i++) {
+
+            s += "1";
+
+        }
+
+        while(comodin.length() < p){
+
+            comodin = "0" + comodin;
+
+        }
+
+        String ss = comodin + host;
+        s += ss + " ";
 
         for (int i = 0; i < s.length(); i++) {
 
-            if (s.charAt(i) == '.') {
+            if(contador == 8){
 
-                bytes[contador] = apoyo;
-                contador++;
+                laIPEnBits += apoyo;
+                contador = 0;
                 apoyo = "";
 
-            } else {
+                if(i != 32){
+
+                    laIPEnBits += ".";
+
+                }
+
+                i--;
+
+            }else{
 
                 apoyo += s.charAt(i);
+                contador++;
+
+            }
+                 
+        }
+
+        comodin = "";
+        contador = 0;
+
+         for (int i = 0; i < referencias.length(); i++) {
+
+            if(!(i < mascara)){
+
+                comodin += ss.charAt(contador);
+                contador++;
+
+            }else{
+
+                comodin += referencias.charAt(i);
 
             }
         }
 
-        for (int i = 0; i < bit.length; i++) {
+        
+        referencias = comodin + " ";
+        comodin = "";
+        apoyo = "";
+        contador = 0;
+        
+        
+        for (int i = 0; i < referencias.length(); i++) {
+            
+            if(contador == 8){
 
-            bit[i] = Integer.parseInt(bytes[i]);
+                comodin += apoyo;
+                contador = 0;
+                apoyo = "";
 
-        }
-
-        return bit;
-
-    }
-
-    public String bitsDeHost(String s, int ss) {
-
-        String ret = "";
-
-        for (int i = 0; i < s.length(); i++) {
-
-            if (i >= ss) {
-
-                ret += s.charAt(i);
-
-            }
-
-        }
-        return ret;
-
-    }
-
-}
-
-
-        //    for (int j = 0; j < host.length(); j++) {
-                
-        //         if(host.charAt(j) == '0'){
-
-        //             System.out.print(host.charAt(j));
+                if(i != referencias.length() - 1){
                     
-        //         }
+                    comodin += ".";
+                    
+                }
+                
+                i--;
+                
+            }else{
 
-        //     }
-        //     System.out.println();
-        // }
+                apoyo += referencias.charAt(i);
+                contador++;
+                
+            }
+            
+        }
+        
+        referencias = comodin;
+
+        for (int i = 0; i < referencias.length(); i++) {
+
+            if(laIPEnBits.charAt(i) == '1' && referencias.charAt(i) == '1'){
+
+                redEnBits += "1";
+
+            }else if(laIPEnBits.charAt(i) == '.'){
+
+                redEnBits += ".";
+
+            }else{
+
+                redEnBits += "0";
+
+            }
+            
+        }
+
+        apoyo = "";
+        redEnBits += ".";
+
+        for (int i = 0; i < redEnBits.length(); i++) {
+            
+            if(redEnBits.charAt(i) == '.'){
+
+                redDefinitiva += Integer.toString(Integer.parseInt(apoyo, 2));
+
+                if(i != redEnBits.length() - 1 ){
+
+                    redDefinitiva += ".";
+
+                }
+                apoyo = "";
+
+            }else{
+
+                apoyo += redEnBits.charAt(i);
+
+            }
+
+        }
+
+        
+        
+        return new Subneting(new IP(redDefinitiva, mascaraNueva));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     private String obtenerHost(int m) {
+
+        String s = "";
+        int ref = 32 - m;
+
+        for (int i = 0; i < ref; i++) {
+
+            s += "0";
+
+        }
+
+        return s;
+    }
+
+    private int obtenerBits() {
+
+        int n = 0;
+
+        while(Math.pow(2, n) < cantidadDeSubredes){
+
+            n++;
+
+        }
+
+        cantidadDeSubredes = (int) Math.pow(2,n);
+
+        return n;
+    }
+    
+}
