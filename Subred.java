@@ -10,7 +10,6 @@ public class Subred {
         this.IP = p;
         this.cantidadDeSubredes = c;
 
-
         crearSubrredes();
 
     }
@@ -30,7 +29,6 @@ public class Subred {
         for (int i = 0; i < subredes.length; i++) {
             
             subredes[i] = obtenerRed(IP.getMascara(), i ,host, mascaraNueva, potencia);
-            System.out.println(subredes[i].toString());
 
         }
 
@@ -199,62 +197,6 @@ public class Subred {
         
         return new Subneting(new IP(redDefinitiva, mascaraNueva));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
      private String obtenerHost(int m) {
 
