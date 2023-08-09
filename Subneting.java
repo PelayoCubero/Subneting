@@ -8,9 +8,9 @@ public class Subneting {
     Subneting(IP ip){
 
         this.red = ip;
-        this.primero = obtenerPrimero(ip);
-        this.ultimo = ip;
-        this.broadcast = ip;
+        this.primero = obtener(ip, 0);
+        this.ultimo = obtener(ip, 1);
+        this.broadcast = obtener(ip,2);
 
 
         System.out.println(toString());
@@ -28,10 +28,9 @@ public class Subneting {
     }
     public IP getUltimo() {
         return ultimo;
-    }
+    } 
 
-
-    private IP obtenerPrimero(IP ip) {
+    private IP obtener(IP ip, int n) {
 
         String ref = "";
         String s = "";
@@ -70,19 +69,36 @@ public class Subneting {
             
             if(i >= ip.getMascara()){
 
-                if(i == 31){
+                if(n == 0){
+
+                    if(i == 31){
+
+                        host += "1";
+
+                    }else{
+
+                        host += "0";
+
+                    }
+
+                }if(n == 1){
+
+                    if(i == 31){
+
+                        host += "0";
+
+                    }else{
+
+                        host += "1";
+
+                    }
+                }if(n == 2){
 
                     host += "1";
 
-                }else{
-
-                    host += "0";
-
                 }
 
-
             }
-
 
         }
         for (int i = 0; i < ip.getMascara(); i++) {
@@ -120,108 +136,15 @@ public class Subneting {
             
         }
 
-
         return new IP(s, ip.getMascara());
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public String toString(){
 
-        return "red: " + this.red.getDireccion() + "\nprimera red: " + this.primero.getDireccion() + "\nultima red: "
+        return " \nred: " + this.red.getDireccion() + "\nprimera red: " + this.primero.getDireccion() + "\nultima red: "
          + this.ultimo.getDireccion() + "\nbroadcast: " + this.broadcast.getDireccion(); 
         
     }
-
-
 
 }
