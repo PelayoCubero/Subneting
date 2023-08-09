@@ -21,8 +21,6 @@ public class IP{
 
         }else{
 
-            System.out.println("direccion IP o mascara erronea");
-
             return;
 
         }
@@ -54,10 +52,6 @@ public class IP{
             this.mascara = mascara;
             this.mascaraComoDireccion = transformar(mascara);
             this.mascaraEnArray = dirToArray(mascaraComoDireccion);
-
-        }else{
-
-            System.out.println("mascara no valida");
 
         }
 
