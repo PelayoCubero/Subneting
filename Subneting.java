@@ -12,8 +12,6 @@ public class Subneting {
         this.ultimo = obtener(ip, 1);
         this.broadcast = obtener(ip,2);
 
-
-        System.out.println(toString());
     }
 
     // getters
